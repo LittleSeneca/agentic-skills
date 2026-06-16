@@ -167,9 +167,8 @@ short sentences, hard specifics, and a point of view.
 - **Steelman, then swing.** Give the other side its strongest form, concede what
   is fair, then break it.
 
-For the full device bank, the ban list, and the slip fixes, see
-`references/graham-voice.md`. For the beliefs to argue from in opinion content,
-see `references/stoic-worldview.md`.
+The ban list and the slip fixes are below. For the beliefs to argue from in
+opinion content, see `references/stoic-worldview.md`.
 
 ## Register by venue (calibrate the same lens)
 
