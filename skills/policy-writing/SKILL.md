@@ -3,17 +3,21 @@ name: policy-writing
 description: >
   Draft, rewrite, or review formal governance, risk, and compliance (GRC)
   documents so they are consistent in format and voice: information security
-  policies, standards, procedures and processes, plans (BCP, DR, IR,
-  configuration management), and charters. Use this skill whenever the user
-  wants to write a new policy, revise an existing one, fix the formatting or
-  tone of a GRC doc, add a section to a policy, draft a procedure or plan, or
-  bring a document in line with the rest of a policy set. It enforces a
-  consistent Information Security Program (ISP) house format (title block,
-  standard section order, roles and revision-history tables) and a plain
-  professional writing style with hard rules (no em dashes, no AI slop, no
-  personal-voice tics). Reach for it even when the user does not say "policy" by
-  name but is clearly producing a control document, an audit artifact, a
-  compliance write-up, or anything destined for governance/docs.
+  policies, standards, and charters. Use this skill whenever the user wants to
+  write a new policy, revise an existing one, fix the formatting or tone of a
+  GRC doc, add a section to a policy, or bring a document in line with the rest
+  of a policy set. It owns the Information Security Program (ISP) house format
+  (title block, standard section order, roles and revision-history tables) and a
+  plain professional writing style with hard rules (no em dashes, no AI slop, no
+  personal-voice tics) that the whole GRC document set shares. For the
+  operational documents that get executed under pressure (business continuity,
+  disaster recovery, and incident response plans, COOP, the Business Impact
+  Analysis, and the procedures and runbooks that operationalize a policy), hand
+  off to the dedicated process-writing skill; for measurable, testable controls,
+  hand off to control-writing. Reach for this skill even when the user does not
+  say "policy" by name but is clearly producing a policy, a standard, a charter,
+  an audit artifact, or anything destined for governance/docs that states a
+  requirement.
 ---
 
 # Policy Writing
@@ -39,21 +43,26 @@ before you write a line, because the structure follows from it.
 - **Policy** — states *what* the organization requires and why. High level,
   durable, role-and-rule oriented. Files end in `_policy`. Most requests are
   this. Uses the full canonical skeleton below.
-- **Procedure / Process** — states *how* a requirement is carried out, step by
-  step, with owners and cadence. Files end in `_process`. Keep the same title
-  block and revision history, but the body is numbered steps, roles, and
-  triggers rather than rules.
-- **Plan** — an operational playbook for a scenario (Business Continuity,
-  Disaster Recovery, Incident Response, Configuration Management). Files end in
-  `_plan`. Same title block and revision history; body is scenario-driven
-  (scope, activation, roles, steps, recovery objectives, testing).
 - **Charter** — establishes a body or responsibility (board, advisory board,
   oversight of internal control). Same title block; body covers purpose,
   authority, membership, responsibilities, meeting cadence.
+- **Procedure / Process / Plan** — the operational *how*: step-by-step
+  procedures and runbooks (files end in `_process`), and scenario playbooks like
+  Business Continuity, Disaster Recovery, Incident Response, and Configuration
+  Management (files end in `_plan`), plus the Business Impact Analysis that
+  grounds their recovery objectives. **Hand these off to the `process-writing`
+  skill**, the specialist for operational documents. It carries the
+  contingency-planning backbone (NIST SP 800-34, ISO 22301, NIST SP 800-61) and
+  the operability checks (named owner, line of succession, activation trigger,
+  BIA-grounded RTO/RPO, testing) that a plan needs and a policy does not. These
+  documents share this skill's house format and voice, so if `process-writing`
+  is not available, keep the same title block and revision history and use the
+  plan and procedure skeletons in `references/policy-template.md`.
 
 If the request is ambiguous (for example "write something for backups"), ask
-one short question: is this a policy (the rule) or a procedure (the steps)? Do
-not guess across that line.
+one short question: is this a policy (the rule, which this skill writes) or a
+procedure or plan (the steps, which `process-writing` writes)? Do not guess
+across that line.
 
 ## The canonical format (ISP house style)
 

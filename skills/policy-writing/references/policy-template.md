@@ -133,7 +133,11 @@ instead of rules.
 
 ## 3. Plan skeleton (BCP / DR / IR / Config Management)
 
-Same title block and Revision History. Body is scenario-driven.
+Operational plans and procedures are the `process-writing` skill's specialty.
+Prefer its richer skeletons and operability checks in
+`skills/process-writing/references/process-template.md`. The skeleton below is a
+fallback for when that skill is not available; it keeps the same title block and
+Revision History, and the body is scenario-driven.
 
 ```markdown
 ### **Purpose**
