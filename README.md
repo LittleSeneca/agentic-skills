@@ -21,3 +21,4 @@ This repo is also a Claude Code plugin marketplace (`.claude-plugin/marketplace.
 | Skill | Description |
 | --- | --- |
 | [`tyrion`](skills/tyrion/SKILL.md) | Strategic and tactical thinking coach for consequential decisions, project scoping, tradeoffs, and negotiations — with a triage gate that catches "how" before "why". |
+| [`policy-writing`](skills/policy-writing/SKILL.md) | Draft, rewrite, or review GRC documents (policies, procedures, plans, charters) in one consistent ISP house format and a plain professional voice. Enforces hard style rules: no em dashes, no AI slop, auditable requirements. |
