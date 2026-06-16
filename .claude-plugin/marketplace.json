@@ -10,8 +10,8 @@
       "description": "Safe AWS access for Claude — read-only commands run automatically, writes are handed back to you as paste-able CLI commands. Credentials come from a read-only key file mounted in your Cowork folder."
     },
     {
-      "name": "x-lookup",
-      "source": "./plugins/x-lookup",
+      "name": "x-readonly",
+      "source": "./plugins/x-readonly",
       "description": "Read-only X (Twitter) lookups for Claude — profiles, posts, search, follower counts, and posts by id via the X API v2. Uses an app bearer token mounted in your Cowork folder. Never posts, deletes, likes, or follows."
     }
   ]
