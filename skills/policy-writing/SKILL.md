@@ -2,18 +2,19 @@
 name: policy-writing
 description: >
   Draft, rewrite, or review formal governance, risk, and compliance (GRC)
-  documents so they are consistent in format and voice: information security
-  policies, standards, procedures and processes, plans (BCP, DR, IR,
-  configuration management), and charters. Use this skill whenever the user
-  wants to write a new policy, revise an existing one, fix the formatting or
-  tone of a GRC doc, add a section to a policy, draft a procedure or plan, or
-  bring a document in line with the rest of a policy set. It enforces a
-  consistent Information Security Program (ISP) house format (title block,
-  standard section order, roles and revision-history tables) and a plain
-  professional writing style with hard rules (no em dashes, no AI slop, no
-  personal-voice tics). Reach for it even when the user does not say "policy" by
-  name but is clearly producing a control document, an audit artifact, a
-  compliance write-up, or anything destined for governance/docs.
+  policies and charters so they are consistent in format and voice: information
+  security policies and the charters that establish governance bodies and
+  responsibilities. Use this skill whenever the user wants to write a new policy
+  or charter, revise an existing one, fix the formatting or tone of one, add a
+  section to a policy or charter, or bring it in line with the rest of a policy
+  set. It enforces a consistent Information Security Program (ISP) house format
+  (title block, standard section order, roles and revision-history tables) and a
+  plain professional writing style with hard rules (no em dashes, no AI slop, no
+  personal-voice tics). This skill covers policies and charters only; it does
+  not write procedures, processes, or operational plans (BCP, DR, IR,
+  configuration management). Reach for it even when the user does not say
+  "policy" by name but is clearly producing a policy or charter destined for
+  governance/docs.
 ---
 
 # Policy Writing
@@ -33,27 +34,23 @@ policy set exists yet, the canonical format below is a safe starting skeleton.
 
 ## Decide what you are writing first
 
-GRC documents come in a few shapes and they are not interchangeable. Pick one
-before you write a line, because the structure follows from it.
+This skill writes two GRC document shapes, and they are not interchangeable.
+Pick one before you write a line, because the structure follows from it.
 
 - **Policy** — states *what* the organization requires and why. High level,
   durable, role-and-rule oriented. Files end in `_policy`. Most requests are
   this. Uses the full canonical skeleton below.
-- **Procedure / Process** — states *how* a requirement is carried out, step by
-  step, with owners and cadence. Files end in `_process`. Keep the same title
-  block and revision history, but the body is numbered steps, roles, and
-  triggers rather than rules.
-- **Plan** — an operational playbook for a scenario (Business Continuity,
-  Disaster Recovery, Incident Response, Configuration Management). Files end in
-  `_plan`. Same title block and revision history; body is scenario-driven
-  (scope, activation, roles, steps, recovery objectives, testing).
 - **Charter** — establishes a body or responsibility (board, advisory board,
   oversight of internal control). Same title block; body covers purpose,
   authority, membership, responsibilities, meeting cadence.
 
-If the request is ambiguous (for example "write something for backups"), ask
-one short question: is this a policy (the rule) or a procedure (the steps)? Do
-not guess across that line.
+This skill does not write procedures, processes, or operational plans (Business
+Continuity, Disaster Recovery, Incident Response, Configuration Management).
+Those state the step-by-step *how* or a scenario playbook, not the *what*. If
+the request is for a procedure or a plan rather than a policy or charter, say so
+and do not force it into the policy format. If the request is ambiguous (for
+example "write something for backups"), ask one short question to confirm it is
+the policy (the rule) before drafting.
 
 ## The canonical format (ISP house style)
 
@@ -180,8 +177,7 @@ someone else's prose into house style.
 
 ## Workflow
 
-1. **Identify the document type** (policy / procedure / plan / charter) and the
-   organization.
+1. **Identify the document type** (policy or charter) and the organization.
 2. **Read the neighbors.** Open the two or three closest existing documents in
    the program's `governance/docs/` (or the relevant repo). Borrow their
    structure, defined terms, role names, and phrasing. This is the single

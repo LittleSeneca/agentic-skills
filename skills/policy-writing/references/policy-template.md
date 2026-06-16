@@ -1,4 +1,4 @@
-# Policy / Procedure / Plan Templates
+# Policy and Charter Templates
 
 Copy from these skeletons. The bold-wrapped headings and the underscore rule
 are deliberate (they form the PDF title block). Keep them verbatim.
@@ -76,15 +76,15 @@ including termination of employment or contract.">
 
 ---
 
-## 2. Procedure / Process skeleton
+## 2. Charter skeleton
 
-Same title block and Revision History. The body is steps, owners, and triggers
-instead of rules.
+Same title block and Revision History. The body establishes a governance body
+or responsibility: its purpose, authority, membership, and how it operates.
 
 ```markdown
-# <Process Name>
+# <Charter Name>
 
-## **<Process Name>**
+## **<Charter Name>**
 
 #### **<Organization>**
 
@@ -92,34 +92,32 @@ instead of rules.
 
 ### **Purpose**
 
-<What this procedure operationalizes and which policy it supports.>
+<What body or responsibility this charter establishes and why it exists.>
 
 ### **Scope**
 
-<What and who the procedure covers.>
+<What the body governs and the boundaries of its authority.>
 
-### **Roles and Responsibilities**
+### **Authority**
+
+<The mandate granted to the body, what it may decide, and to whom it reports.>
+
+### **Membership**
 
 |  |  |
 | --- | --- |
 | **Role** | **Responsibility** |
-| <Owner role> | <What they do in this process> |
+| <Chair / member role> | <What they do on this body> |
 | Security Officer | Annual review and updates |
 
-### **Procedure**
+### **Responsibilities**
 
-#### **<Phase or step group>**
+* <Responsibility of the body, normative: "must" / "should">
+* <Responsibility>
 
-1. <Step, with the responsible role named.>
-2. <Step, with trigger or cadence: "Daily", "On detection", "Within 24 hours".>
+### **Meetings**
 
-#### **<Phase or step group>**
-
-1. <Step.>
-
-### **Review**
-
-<Cadence at which this procedure is tested or reviewed.>
+<Meeting cadence, quorum, and how decisions and minutes are recorded.>
 
 ### **Revision History**
 
@@ -131,24 +129,7 @@ instead of rules.
 
 ---
 
-## 3. Plan skeleton (BCP / DR / IR / Config Management)
-
-Same title block and Revision History. Body is scenario-driven.
-
-```markdown
-### **Purpose**
-### **Scope**
-### **Roles and Responsibilities**     (the response team and their duties)
-### **<Activation / Detection>**       (what triggers the plan)
-### **<Procedures>**                   (the ordered response steps)
-### **<Recovery Objectives>**          (RTO / RPO for DR/BCP, where relevant)
-### **<Testing>**                      (how and how often the plan is exercised)
-### **Revision History**
-```
-
----
-
-## 4. Filled mini-example (shows the tone and the tables)
+## 3. Filled mini-example (shows the tone and the tables)
 
 ```markdown
 # Removable Media Policy

@@ -21,5 +21,5 @@ This repo is also a Claude Code plugin marketplace (`.claude-plugin/marketplace.
 | Skill | Description |
 | --- | --- |
 | [`tyrion`](skills/tyrion/SKILL.md) | Strategic and tactical thinking coach for consequential decisions, project scoping, tradeoffs, and negotiations — with a triage gate that catches "how" before "why". |
-| [`policy-writing`](skills/policy-writing/SKILL.md) | Draft, rewrite, or review GRC documents (policies, procedures, plans, charters) in one consistent ISP house format and a plain professional voice. Enforces hard style rules: no em dashes, no AI slop, auditable requirements. |
+| [`policy-writing`](skills/policy-writing/SKILL.md) | Draft, rewrite, or review GRC policies and charters in one consistent ISP house format and a plain professional voice. Covers policies and charters only (not procedures or plans). Enforces hard style rules: no em dashes, no AI slop, auditable requirements. |
 | [`control-writing`](skills/control-writing/SKILL.md) | Design, write, review, or rationalize security and compliance controls so they are measurable, actionable, cost-efficient, and risk-aligned. Carries the full NIST SP 800-53 Rev 5 catalog as a machine-readable reference and pushes back on bad control design rather than writing good copy for a weak control. |
