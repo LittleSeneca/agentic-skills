@@ -7,14 +7,17 @@ description: >
   responsibilities. Use this skill whenever the user wants to write a new policy
   or charter, revise an existing one, fix the formatting or tone of one, add a
   section to a policy or charter, or bring it in line with the rest of a policy
-  set. It enforces a consistent Information Security Program (ISP) house format
-  (title block, standard section order, roles and revision-history tables) and a
-  plain professional writing style with hard rules (no em dashes, no AI slop, no
-  personal-voice tics). This skill covers policies and charters only; it does
-  not write procedures, processes, or operational plans (BCP, DR, IR,
-  configuration management). Reach for it even when the user does not say
-  "policy" by name but is clearly producing a policy or charter destined for
-  governance/docs.
+  set. It owns the Information Security Program (ISP) house format (title block,
+  standard section order, roles and revision-history tables) and a plain
+  professional writing style with hard rules (no em dashes, no AI slop, no
+  personal-voice tics) that the whole GRC document set shares. This skill covers
+  policies and charters only. For the operational documents that get executed
+  under pressure (business continuity, disaster recovery, and incident response
+  plans, COOP, the Business Impact Analysis, and the procedures and runbooks
+  that operationalize a policy), hand off to the dedicated process-writing skill;
+  for measurable, testable controls, hand off to control-writing. Reach for this
+  skill even when the user does not say "policy" by name but is clearly producing
+  a policy or charter destined for governance/docs.
 ---
 
 # Policy Writing
@@ -34,8 +37,10 @@ policy set exists yet, the canonical format below is a safe starting skeleton.
 
 ## Decide what you are writing first
 
-This skill writes two GRC document shapes, and they are not interchangeable.
-Pick one before you write a line, because the structure follows from it.
+This skill writes two GRC document shapes, policies and charters. The third
+bullet below is a related shape it does not write but should recognize and route
+to the right skill. Pick the right one before you write a line, because the
+structure follows from it.
 
 - **Policy** — states *what* the organization requires and why. High level,
   durable, role-and-rule oriented. Files end in `_policy`. Most requests are
@@ -43,14 +48,27 @@ Pick one before you write a line, because the structure follows from it.
 - **Charter** — establishes a body or responsibility (board, advisory board,
   oversight of internal control). Same title block; body covers purpose,
   authority, membership, responsibilities, meeting cadence.
+- **Procedure / Process / Plan** — the operational *how*: step-by-step
+  procedures and runbooks (files end in `_process`), and scenario playbooks like
+  Business Continuity, Disaster Recovery, Incident Response, and Configuration
+  Management (files end in `_plan`), plus the Business Impact Analysis that
+  grounds their recovery objectives. **Hand these off to the `process-writing`
+  skill**, the specialist for operational documents. It carries the
+  contingency-planning backbone (NIST SP 800-34, ISO 22301, NIST SP 800-61) and
+  the operability checks (named owner, line of succession, activation trigger,
+  BIA-grounded RTO/RPO, testing) that a plan needs and a policy does not. These
+  documents share this skill's house format and voice, so if `process-writing`
+  is not available, reuse the title block and Revision History conventions from
+  `references/policy-template.md` and follow the same plain professional voice.
 
 This skill does not write procedures, processes, or operational plans (Business
 Continuity, Disaster Recovery, Incident Response, Configuration Management).
-Those state the step-by-step *how* or a scenario playbook, not the *what*. If
-the request is for a procedure or a plan rather than a policy or charter, say so
-and do not force it into the policy format. If the request is ambiguous (for
-example "write something for backups"), ask one short question to confirm it is
-the policy (the rule) before drafting.
+Those state the step-by-step *how* or a scenario playbook, not the *what*. Hand
+them to the `process-writing` skill rather than forcing them into the policy
+format. If the request is ambiguous (for example "write something for backups"),
+ask one short question: is this a policy (the rule, which this skill writes) or a
+procedure or plan (the steps, which `process-writing` writes)? Do not guess
+across that line.
 
 ## The canonical format (ISP house style)
 
