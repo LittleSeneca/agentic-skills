@@ -14,6 +14,7 @@ This repo is also a Claude Code plugin marketplace (`.claude-plugin/marketplace.
 | Plugin | Description |
 | --- | --- |
 | [`aws-readonly`](plugins/aws-readonly/README.md) | Safe AWS access for Claude. Read-only commands run automatically under a read-only profile; every write is handed back to you as a paste-able CLI command. Credentials come from a read-only key file you mount in your Cowork folder. **Only ever give it read-only keys.** |
+| [`x-lookup`](plugins/x-lookup/README.md) | Read-only X (Twitter) lookups for Claude — profiles, recent posts, search, follower counts, and posts by id via the X API v2. Uses an app bearer token you mount in your Cowork folder. **Strictly read-only:** never posts, deletes, likes, or follows. |
 
 ## Skills
 
