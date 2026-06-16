@@ -1,4 +1,4 @@
-# x-lookup
+# x-readonly
 
 Read-only X (Twitter) lookups for Claude.
 
