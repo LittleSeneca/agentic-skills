@@ -1,0 +1,13 @@
+{
+  "name": "agentic-skills",
+  "owner": {
+    "name": "LittleSeneca"
+  },
+  "plugins": [
+    {
+      "name": "aws-readonly",
+      "source": "./plugins/aws-readonly",
+      "description": "Safe AWS access for Claude — read-only commands run automatically, writes are handed back to you as paste-able CLI commands. Credentials come from a read-only key file mounted in your Cowork folder."
+    }
+  ]
+}
