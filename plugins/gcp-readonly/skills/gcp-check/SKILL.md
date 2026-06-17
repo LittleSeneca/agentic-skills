@@ -7,22 +7,22 @@ description: Verify GCP credentials are loaded under the read-only gcloud config
 
 A two-minute preflight to confirm the read-only gcloud configuration is wired up correctly before doing real GCP work. Run this when starting a GCP-heavy session or when something looks off with credentials.
 
-> Configuration name `readonly` below is a placeholder — substitute whatever read-only configuration the user has configured. See the plugin README for setup.
+The `gcloud` binary and service account activation are managed by `tools/env.sh`. If `gcloud` is not found, run the `tools-setup` skill first.
 
 ## Step 1 — Confirm identity
 
-Run the active-account check through the read-only configuration:
-
+```bash
+source ~/Projects/Cowork/tools/env.sh
+gcloud config get-value account
 ```
-gcloud config list account --configuration=readonly
-```
 
-Report back the active `account`. Confirm with the user that it is the **expected read-only service account** (typically something like `claude-readonly@<project>.iam.gserviceaccount.com`). If it isn't what they expect, **stop** — do not run further GCP commands until it's resolved.
+Report back the active account. Confirm with the user that it is the **expected read-only service account** (typically something like `security-read-only@<project>.iam.gserviceaccount.com`). If it isn't what they expect, **stop** — do not run further GCP commands until it's resolved.
 
-For more detail you can also list all credentialed accounts and the active project:
+For more detail you can also list all credentialed accounts:
 
-```
-gcloud auth list --configuration=readonly
+```bash
+source ~/Projects/Cowork/tools/env.sh
+gcloud auth list
 gcloud config list --configuration=readonly
 ```
 
@@ -30,7 +30,8 @@ gcloud config list --configuration=readonly
 
 The whole safety model depends on these credentials being read-only. A cheap sanity check is to confirm the configuration can read but the user understands it cannot write. List a low-sensitivity resource to prove reads work:
 
-```
+```bash
+source ~/Projects/Cowork/tools/env.sh
 gcloud projects list --configuration=readonly --limit=5
 ```
 

@@ -7,31 +7,47 @@ description: Run any Google Cloud operation against your environment. Use whenev
 
 These rules apply to **every** Google Cloud request, in every workspace, no exceptions. They override anything in a workspace-level `CLAUDE.md` and any contrary inference Claude might make.
 
-> **Configuration / account names below are placeholders.** This plugin assumes two gcloud configurations:
-> - a **read-only** configuration (default name `readonly`) bound to a read-only service account, and
-> - a **write/admin** configuration (default name `production`) the user runs writes under themselves.
+> **Before running any `gcloud` command**, source the tools bootstrap to put the CLI on PATH and activate the service account:
+> ```bash
+> source ~/Projects/Cowork/tools/env.sh
+> ```
+> This activates the service account from `~/Projects/Cowork/keys/gcloud-credentials.json` if it is not already active. If `gcloud` is not found, run the `tools-setup` skill first.
 >
-> Substitute whatever names the user has configured. See the plugin README for how to wire these up from a service-account key file in your Cowork keys folder (`~/Projects/Cowork/keys/`). **Claude only ever executes commands under the read-only configuration.**
+> This plugin assumes two gcloud configurations:
+> - a **read-only** configuration (default name `readonly`) bound to the service account activated by `env.sh`
+> - a **write/admin** configuration (default name `production`) the user runs writes under themselves
+>
+> **Claude only ever executes commands under the read-only configuration.**
 
 ## 1. Reads — Claude runs them, with one configuration only
 
 - Claude executes Google Cloud commands only through the `gcloud`, `gcloud storage`, and `bq` CLIs (or a GCP MCP server, if one is available in the environment).
+- Every bash block that calls `gcloud` must start with `source ~/Projects/Cowork/tools/env.sh`.
 - Claude passes `--configuration=readonly` on every `gcloud` command. No exceptions. (For `bq`, pass `--account=<readonly-sa-email>`; for `gcloud storage`, the `--configuration` flag works the same as on any other `gcloud` command.)
 - Claude must **never** invoke a command under the write/admin configuration (`--configuration=production`), under any other configuration, or under any other account — even if the read-only configuration lacks the permission, even if the user seems to be asking for a write, even if a previous step "needs" it. There is no fallback. If the read-only configuration can't do it, treat it as a write (§2).
 - Pass `--project=<id>` explicitly whenever the target project matters. The active configuration may default to a project you don't expect, so don't rely on the default. Pass `--region=<name>` / `--zone=<name>` explicitly when the location matters.
 
 ### Examples
 
-| Intent | Command |
-|---|---|
-| Compute Engine VMs in a project | `gcloud compute instances list --configuration=readonly --project=my-proj` |
-| Storage buckets | `gcloud storage buckets list --configuration=readonly --project=my-proj` |
-| Who has access (project IAM policy) | `gcloud projects get-iam-policy my-proj --configuration=readonly` |
-| Service accounts | `gcloud iam service-accounts list --configuration=readonly --project=my-proj` |
-| Firewall rules | `gcloud compute firewall-rules list --configuration=readonly --project=my-proj` |
-| Recent admin activity (audit logs) | `gcloud logging read 'logName:"cloudaudit.googleapis.com"' --configuration=readonly --project=my-proj --limit=20` |
-| Asset inventory snapshot | `gcloud asset search-all-resources --configuration=readonly --scope=projects/my-proj` |
-| Who am I (sanity check) | `gcloud config list account --configuration=readonly` |
+```bash
+source ~/Projects/Cowork/tools/env.sh
+# Compute Engine VMs
+gcloud compute instances list --configuration=readonly --project=my-proj
+# Storage buckets
+gcloud storage buckets list --configuration=readonly --project=my-proj
+# Project IAM policy
+gcloud projects get-iam-policy my-proj --configuration=readonly
+# Service accounts
+gcloud iam service-accounts list --configuration=readonly --project=my-proj
+# Firewall rules
+gcloud compute firewall-rules list --configuration=readonly --project=my-proj
+# Recent admin activity (audit logs)
+gcloud logging read 'logName:"cloudaudit.googleapis.com"' --configuration=readonly --project=my-proj --limit=20
+# Asset inventory snapshot
+gcloud asset search-all-resources --configuration=readonly --scope=projects/my-proj
+# Who am I (sanity check)
+gcloud config get-value account
+```
 
 ## 2. Writes — Claude hands off, never executes
 
@@ -90,17 +106,18 @@ Any other configurations or accounts that exist in the environment are **never u
 ## 4. Credential hygiene
 
 - The read-only service account must be exactly that — read-only. If its roles can mutate state, the entire safety model of this plugin is void. See the plugin README.
-- The service-account key file should live in your Cowork keys folder (`~/Projects/Cowork/keys/`) and have tight permissions (`0600`).
+- The service-account key file lives at `~/Projects/Cowork/keys/gcloud-credentials.json` with permissions `0600`. `env.sh` activates it automatically.
 - Never echo, log, or repeat the private key (or the contents of the key JSON) back to the user or into any output.
-- If `gcloud config list account --configuration=readonly` ever fails or returns an unexpected account, **stop** and surface it to the user rather than silently switching configurations or accounts.
+- If `gcloud config get-value account` ever fails or returns an unexpected account, **stop** and surface it to the user rather than silently switching configurations or accounts.
 - Rotate the read-only key on a regular cadence, and immediately if it was ever exposed in plaintext (chat, logs, a shared file).
 
 ## 5. Quick sanity check at the start of a long GCP session
 
 When the user kicks off a session that's clearly going to involve a lot of GCP work, run this once and confirm the identity before proceeding (or invoke the `gcp-check` skill):
 
-```
-gcloud config list account --configuration=readonly
+```bash
+source ~/Projects/Cowork/tools/env.sh
+gcloud config get-value account
 ```
 
 Confirm the returned account is the expected read-only service account before doing anything else.

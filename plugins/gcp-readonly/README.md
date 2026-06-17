@@ -42,11 +42,17 @@ Two skills ship with the plugin:
 
 ---
 
+## Prerequisites
+
+Before using this plugin for the first time on a new machine, run the **`tools-setup` skill**. It installs `gcloud` as a persistent standalone binary in `~/Projects/Cowork/tools/` and activates the service account. Subsequent sessions source `tools/env.sh` and are ready instantly.
+
+---
+
 ## Setup
 
 ### 1. Create a read-only service account
 
-In the GCP project (or organization) you want Claude to read, create a service account and grant it read-only roles, then generate a JSON key:
+In the GCP project (or organization) you want Claude to read, create a service account and grant it read-only roles, then generate a JSON key. Run these commands from your own terminal (not through Claude — these are writes):
 
 ```bash
 # Create the service account
@@ -62,7 +68,7 @@ gcloud projects add-iam-policy-binding my-proj \
   --role="roles/iam.securityReviewer"
 
 # Create a JSON key for that service account
-gcloud iam service-accounts keys create ~/Projects/Cowork/keys/gcp-readonly-key.json \
+gcloud iam service-accounts keys create ~/Projects/Cowork/keys/gcloud-credentials.json \
   --iam-account=claude-readonly@my-proj.iam.gserviceaccount.com
 ```
 
@@ -70,48 +76,48 @@ Again: this service account must not be able to change anything. For org-wide vi
 
 ### 2. Put the key in your Cowork keys folder
 
-This plugin reads credentials from a JSON key file in your **Cowork keys folder** (`~/Projects/Cowork/keys/`), the dedicated key store inside the Cowork folder you make available to Claude. Do not paste the key into chat and do not commit it to a repo.
+The credential file must be at `~/Projects/Cowork/keys/gcloud-credentials.json` — that is the path `tools/env.sh` expects. Do not paste the key into chat and do not commit it to a repo.
 
-The example above already writes the key to `~/Projects/Cowork/keys/gcp-readonly-key.json`. Lock it down:
+Lock it down:
 
 ```bash
-chmod 0600 ~/Projects/Cowork/keys/gcp-readonly-key.json
+chmod 0600 ~/Projects/Cowork/keys/gcloud-credentials.json
 ```
 
-### 3. Create a `readonly` gcloud configuration bound to that key
+### 3. Create a `readonly` gcloud configuration
 
-A gcloud *configuration* bundles an active account + project (the GCP analog of an AWS named profile). Activate the read-only service account and bind it to a dedicated configuration:
+A gcloud *configuration* bundles an active account + project. Create one named `readonly` and bind it to the service account:
 
 ```bash
-# Create and switch to a 'readonly' configuration
 gcloud config configurations create readonly
-
-# Activate the read-only service-account key
 gcloud auth activate-service-account \
-  --key-file="$HOME/Projects/Cowork/keys/gcp-readonly-key.json"
-
-# Set the default project for this configuration
+  --key-file="$HOME/Projects/Cowork/keys/gcloud-credentials.json"
 gcloud config set project my-proj --configuration=readonly
 gcloud config set account claude-readonly@my-proj.iam.gserviceaccount.com --configuration=readonly
 ```
 
 Keep your own write/admin credentials in a separate configuration (default name `production`) — Claude never uses it; it only appears in the write-handoff commands Claude tells *you* to run.
 
-### 4. Verify
+### 4. Run tools-setup
 
-Run the `gcp-check` skill, or simply:
+`tools-setup` installs the `gcloud` binary, writes `tools/env.sh`, and verifies the service account is active. You do not need to manually `gcloud auth activate-service-account` in each session — `env.sh` handles that.
+
+### 5. Verify
+
+Run the `gcp-check` skill, or:
 
 ```bash
-gcloud config list account --configuration=readonly
+source ~/Projects/Cowork/tools/env.sh
+gcloud config get-value account
 ```
 
-Confirm the returned account is the read-only service account you created. If it is, you're ready — ask Claude any GCP question and it will use `--configuration=readonly` automatically.
+Confirm the returned account is the read-only service account you created. If it is, you're ready.
 
 ---
 
-## Customizing configuration names
+## Configuration names
 
-`readonly` and `production` are defaults. If your configurations are named differently, tell Claude at the start of the session (e.g. "my read-only configuration is `audit-ro` and my write configuration is `prod-admin`") and it will substitute them. Claude still only ever *executes* under the read-only one.
+`readonly` and `production` are defaults. If your configurations are named differently, tell Claude at the start of the session (e.g. "my read-only configuration is `audit-ro`") and it will substitute them. Claude still only ever *executes* under the read-only one.
 
 ---
 
