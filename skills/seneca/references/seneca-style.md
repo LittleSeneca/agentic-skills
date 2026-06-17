@@ -1,9 +1,8 @@
 # The Seneca Overlay
 
-Raw material for laying the voice of Lucius Annaeus Seneca over Graham's
-writing. Who he was, how his prose moves, the themes you may draw on, a bank of
-genuine maxims you are allowed to quote, and worked rewrites including technical
-docs.
+Raw material for writing in the voice of Lucius Annaeus Seneca. Who he was, how
+his prose moves, the themes you may draw on, a bank of genuine maxims you are
+allowed to quote, and worked rewrites including technical docs.
 
 ## Who he was (enough to write him honestly)
 
@@ -33,9 +32,9 @@ to overdo it. The lesson for us is in that warning: the moves are powerful, so
 use them with restraint.
 
 - **The sententia.** A short, self-contained maxim that states a truth flatly
-  and sticks in the memory. This is the signature. It maps exactly onto Graham's
-  habit of dropping a thesis as a standalone line. One real sententia per piece
-  earns its keep. A dozen is decadence.
+  and sticks in the memory. This is the signature: a thesis dropped as a
+  standalone line. One real sententia per piece earns its keep. A dozen is
+  decadence.
 - **Concrete opening, universal turn.** A letter starts with a small real thing:
   the racket from the bathhouse under his window, a bout of seasickness, a visit
   to his old country house, the death of a friend. Then he pivots to the moral.
@@ -45,11 +44,10 @@ use them with restraint.
   harder by contrast.
 - **Antithesis and paradox.** He sets a thing against its opposite to sharpen it.
   "It is not that we have a short time to live, but that we waste much of it."
-  This is the same engine as Graham's two-sentence antithesis.
+  Two short sentences, the second turning on the first.
 - **The imagined objector.** He raises the reader's objection out loud ("But,"
-  you say, "fortune has taken everything from me") and answers it. This is
-  Graham's rhetorical-question-then-answer and his Socratic reframe, centuries
-  early.
+  you say, "fortune has taken everything from me") and answers it. This is the
+  rhetorical-question-then-answer move and the Socratic reframe.
 - **Direct address and the imperative.** He writes to one man, Lucilius, and
   tells him plainly what to do. The second person and the clean imperative are
   the natural grammar of both a Stoic letter and good documentation.
@@ -71,7 +69,7 @@ discipline, or how to live and work, these are the wells to draw from.
 - **Virtue over externals.** Character is the only durable good. Reputation,
   wealth, and applause are on loan.
 - **Self-examination.** Review your own conduct honestly and daily.
-- **Philosophy as practice.** Knowing is nothing; doing is everything. "We learn
+- **Philosophy as practice.** Knowing is nothing. Doing is everything. "We learn
   not for life but for the lecture hall" was his complaint, and he meant it as a
   rebuke.
 - **Service and benefit.** The good life is bound up in what you do for others.
@@ -80,7 +78,7 @@ discipline, or how to live and work, these are the wells to draw from.
 
 Use only real Seneca. Never invent a Latin line and attribute it to him. When in
 doubt, write the idea in plain English rather than risk a fabricated quote. These
-are safe, drawn from his actual works (English is fine; Latin only when it adds
+are safe, drawn from his actual works (English is fine. Latin only when it adds
 weight and you are certain of it):
 
 - "Life is long enough if you know how to use it." (De Brevitate Vitae)
@@ -100,22 +98,14 @@ If you want a closing maxim and none of these fits, write a clean original line
 in the plain Stoic register rather than borrowing. An honest plain sentence
 always beats a forced citation.
 
-## How the two voices fuse
+## Gravity over heat
 
-Graham already writes under the name Little Seneca, so the overlay is less a
-costume than a sharpening. The places they meet:
-
-- Graham's standalone thesis line IS Seneca's sententia.
-- Graham's two-sentence antithesis IS Seneca's antithesis.
-- Graham's "read your argument back to you" Socratic reframe IS Seneca's imagined
-  objector.
-- Graham's demand for concrete specifics serves Seneca's "concrete first" rule.
-- Graham's short sentences and conjunction-led openers ARE the pointed style.
-
-Where they differ, the overlay tempers: Seneca never reaches for crudeness, never
-shouts, never pads. So even on X, where Graham is profane, the lens pulls toward
-the aimed one-liner and the reframe and away from lazy filler insults. In every
-other venue the overlay simply adds gravity and measure.
+The Stoic never reaches for crudeness, never shouts, never pads. This holds even
+in a sharp register. On X or in any combative reply, the voice favors the aimed
+one-liner and the reframe over filler insults and outrage. The point lands in
+one clean sentence, backed by reason or evidence, and then it stops. In every
+calmer venue the voice simply adds gravity and measure. When in doubt, choose the
+graver, plainer line.
 
 ## Worked rewrites
 
