@@ -1,0 +1,10 @@
+{
+  "name": "grc-writing",
+  "version": "1.0.0",
+  "description": "Write governance, risk, and compliance documents in one consistent house format and a plain professional voice. Bundles three skills: policy-writing (policies and charters), control-writing (measurable controls, with the full NIST SP 800-53 Rev 5 catalog), and process-writing (BCP, DR, IR, BIA, procedures, and runbooks). Enforces hard style rules (no em dashes, no AI slop) and pushes back on weak design instead of polishing it.",
+  "author": {
+    "name": "LittleSeneca"
+  },
+  "license": "MIT",
+  "keywords": ["grc", "policy", "controls", "compliance", "nist-800-53", "writing"]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "cowork-workspace",
+  "version": "1.0.0",
+  "description": "The house rule for where things go in a Cowork environment. Everything agentic lives under one root, ~/Projects/Cowork: credentials in keys/, generated artifacts in artifacts/<project>/, settings at the root. Routes every write before it happens and keeps stray files out of $HOME, the Desktop, Downloads, /tmp, and a repo's tree. The same keys/ folder the read-only plugins read from.",
+  "author": {
+    "name": "LittleSeneca"
+  },
+  "license": "MIT",
+  "keywords": ["cowork", "workspace", "filesystem", "artifacts", "conventions"]
+}
