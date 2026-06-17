@@ -14,7 +14,7 @@ CREDS=$(ls /sessions/*/mnt/Cowork/keys/aws-credentials 2>/dev/null | head -1)
 [ -z "$CREDS" ] && CREDS="$HOME/Projects/Cowork/keys/aws-credentials"
 export AWS_SHARED_CREDENTIALS_FILE="$CREDS"
 export AWS_PROFILE="avatarfleet-readonly"
-PYPATH=$(ls /sessions/*/mnt/Cowork/tools/python-packages 2>/dev/null | head -1)
+PYPATH=$(echo /sessions/*/mnt/Cowork/tools/python-packages | tr ' ' '\n' | head -1)
 [ -z "$PYPATH" ] && PYPATH="$HOME/Projects/Cowork/tools/python-packages"
 export PYTHONPATH="$PYPATH:$PYTHONPATH"
 
