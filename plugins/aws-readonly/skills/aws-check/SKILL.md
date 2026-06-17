@@ -5,58 +5,41 @@ description: Verify AWS credentials are loaded under the read-only profile befor
 
 # AWS credential check
 
-A two-minute preflight to confirm the read-only profile is wired up correctly before doing real AWS work. Run this when starting an AWS-heavy session or when something looks off with credentials.
+Confirm the read-only profile is wired up and working before doing real AWS work.
 
-## Step 1 — Bootstrap
-
-Use the portable bootstrap (handles both native terminal and Cowork sandbox):
+## Run the check
 
 ```bash
-_COWORK_ENV=$(find /sessions /Users -maxdepth 6 -name "env.sh" \
-  -path "*/Cowork/tools/env.sh" 2>/dev/null | head -1)
-[ -z "$_COWORK_ENV" ] && _COWORK_ENV="$HOME/Projects/Cowork/tools/env.sh"
-source "$_COWORK_ENV"
+CREDS=$(ls /sessions/*/mnt/Cowork/keys/aws-credentials 2>/dev/null | head -1)
+[ -z "$CREDS" ] && CREDS="$HOME/Projects/Cowork/keys/aws-credentials"
+export AWS_SHARED_CREDENTIALS_FILE="$CREDS"
+export AWS_PROFILE="avatarfleet-readonly"
+PYPATH=$(ls /sessions/*/mnt/Cowork/tools/python-packages 2>/dev/null | head -1)
+[ -z "$PYPATH" ] && PYPATH="$HOME/Projects/Cowork/tools/python-packages"
+export PYTHONPATH="$PYPATH:$PYTHONPATH"
+
+python3 -c "
+import boto3
+i = boto3.Session().client('sts').get_caller_identity()
+print('Account:', i['Account'])
+print('UserId: ', i['UserId'])
+print('ARN:    ', i['Arn'])
+"
 ```
 
-If `aws --version` fails after this, the `tools/bin/aws` wrapper is a broken absolute symlink
-from a prior session. Fix it without re-downloading — the actual CLI files are still present:
+## Interpret the result
 
-```bash
-TOOLS="$(dirname "$_COWORK_ENV")"
-cat > "$TOOLS/bin/aws" << 'AWSEOF'
-#!/bin/bash
-TOOLS="$(cd "$(dirname "$0")/.." && pwd)"
-AWS_BIN=$(find "$TOOLS" -maxdepth 6 -name "aws" -path "*/dist/aws" 2>/dev/null | sort -V | tail -1)
-[ -z "$AWS_BIN" ] && { echo "aws: binary not found under $TOOLS — run tools-setup" >&2; exit 127; }
-exec "$AWS_BIN" "$@"
-AWSEOF
-chmod +x "$TOOLS/bin/aws"
-source "$_COWORK_ENV"
-```
-
-If the binary truly isn't there, run the `tools-setup` skill.
-
-## Step 2 — Confirm identity
-
-```bash
-aws sts get-caller-identity --profile "$AWS_DEFAULT_PROFILE"
-echo "Profile: $AWS_DEFAULT_PROFILE"
-```
-
-Report back the `Account`, `UserId`, and `Arn`. Confirm with the user that the ARN is the **expected read-only principal**. If it isn't what they expect, **stop** — do not run further AWS commands until it's resolved.
-
-## Step 3 — Confirm reads work (optional but recommended)
-
-```bash
-aws ec2 describe-regions --profile "$AWS_DEFAULT_PROFILE" --query 'Regions[].RegionName' --output text
-```
-
-If this fails with an auth error, the credentials or key file are misconfigured — surface it and point the user at the plugin README setup steps.
+- **boto3 not found** — run `pip install boto3 --break-system-packages` then retry.
+- **Credentials file missing** — `$CREDS` resolved to nothing or the file is absent. Point the user at `~/Projects/Cowork/keys/aws-credentials` and ask them to populate it.
+- **Unexpected ARN** — the profile is not the expected read-only principal. **Stop.** Do not run further AWS commands until the user confirms the identity or fixes the credentials.
+- **`NoCredentialError` / `ProfileNotFound`** — the `aws-credentials` file doesn't have an `[avatarfleet-readonly]` section. Surface the error and ask the user to add it.
 
 ## What good looks like
 
-- `get-caller-identity` returns the expected read-only ARN.
-- Reads succeed.
-- Everyone understands writes will be **handed off** as paste-able CLI commands, never executed by Claude (see the `aws` skill).
+```
+Account: 019378881402
+UserId:  AIDAXXXXXXXXXXXXXXXX
+ARN:     arn:aws:iam::019378881402:user/claude-readonly
+```
 
-If all three hold, you're clear to proceed.
+Once the ARN checks out, you're clear to proceed with the `aws` skill.
