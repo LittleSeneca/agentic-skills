@@ -1,6 +1,6 @@
 ---
 name: x-api
-description: Use this skill when the user mentions X, Twitter, tweets, or posts, references an X handle, or asks to look up an X profile, see someone's latest posts, search posts, check a follower count, or fetch a post by id. Runs read-only lookups against the X API v2 using a bearer token stored in a credentials file mounted in the user's Cowork folder. Defaults to the user's configured handle but can also read other public accounts when asked. Strictly read-only: never posts, deletes, likes, or follows.
+description: Use this skill when the user mentions X, Twitter, tweets, or posts, references an X handle, or asks to look up an X profile, see someone's latest posts, search posts, check a follower count, or fetch a post by id. Runs read-only lookups against the X API v2 using a bearer token stored in a credentials file in the user's Cowork keys folder (`~/Projects/Cowork/keys/`). Defaults to the user's configured handle but can also read other public accounts when asked. Strictly read-only: never posts, deletes, likes, or follows.
 ---
 
 # X (Twitter) read-only lookups
@@ -11,14 +11,14 @@ Read-only access to the X API v2. This skill **reads** public X data — profile
 
 ## Credentials
 
-The bearer token lives in a credentials file mounted in the user's **Cowork folder** (default `~/cowork/x-credentials`). It is an `key=value` file; the only field this skill needs is `bearer_token`. An optional `default_handle` sets which account to use when the user doesn't name one.
+The bearer token lives in a credentials file in the user's **Cowork keys folder** (default `~/Projects/Cowork/keys/x-credentials`). It is an `key=value` file; the only field this skill needs is `bearer_token`. An optional `default_handle` sets which account to use when the user doesn't name one.
 
 **Never echo the token into chat, logs, command output, or any file.** Load it into a shell variable and reference the variable.
 
 Load it like this (adjust the path if the user mounts it elsewhere):
 
 ```bash
-CREDS="${X_CREDENTIALS_FILE:-$HOME/cowork/x-credentials}"
+CREDS="${X_CREDENTIALS_FILE:-$HOME/Projects/Cowork/keys/x-credentials}"
 BEARER="$(grep -E '^bearer_token' "$CREDS" | head -1 | cut -d= -f2- | tr -d ' "'"'"'')"
 DEFAULT_HANDLE="$(grep -E '^default_handle' "$CREDS" | head -1 | cut -d= -f2- | tr -d ' "@'"'"'')"
 ```

@@ -12,16 +12,16 @@ A quick preflight to confirm the X API bearer token is mounted and working befor
 ## Step 1 — Confirm the credentials file is mounted
 
 ```bash
-CREDS="${X_CREDENTIALS_FILE:-$HOME/cowork/x-credentials}"
+CREDS="${X_CREDENTIALS_FILE:-$HOME/Projects/Cowork/keys/x-credentials}"
 test -f "$CREDS" && echo "found: $CREDS" || echo "MISSING: $CREDS"
 ```
 
-If it's missing, the user hasn't mounted the credentials file in their Cowork folder. Point them at the plugin README and stop.
+If it's missing, the user hasn't put the credentials file in their Cowork keys folder (`~/Projects/Cowork/keys/`). Point them at the plugin README and stop.
 
 ## Step 2 — Confirm the token loads (without printing it)
 
 ```bash
-CREDS="${X_CREDENTIALS_FILE:-$HOME/cowork/x-credentials}"
+CREDS="${X_CREDENTIALS_FILE:-$HOME/Projects/Cowork/keys/x-credentials}"
 BEARER="$(grep -E '^bearer_token' "$CREDS" | head -1 | cut -d= -f2- | tr -d ' "'"'"'')"
 DEFAULT_HANDLE="$(grep -E '^default_handle' "$CREDS" | head -1 | cut -d= -f2- | tr -d ' "@'"'"'')"
 [ -n "$BEARER" ] && echo "bearer_token: loaded (${#BEARER} chars)" || echo "bearer_token: NOT FOUND"
@@ -48,7 +48,7 @@ curl -s -o /dev/null -w "HTTP %{http_code}\n" \
 
 ## What good looks like
 
-- Credentials file present in the Cowork folder.
+- Credentials file present in the Cowork keys folder (`~/Projects/Cowork/keys/`).
 - `bearer_token` loads and is non-empty.
 - A live profile lookup returns `HTTP 200`.
 

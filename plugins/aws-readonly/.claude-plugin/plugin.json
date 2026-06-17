@@ -1,7 +1,7 @@
 {
   "name": "aws-readonly",
   "version": "1.0.0",
-  "description": "Safe AWS access for Claude. Claude runs read-only commands through a read-only profile only, and hands every write back to you as a copy-paste CLI command. Credentials are read from a file you mount in your Cowork folder.",
+  "description": "Safe AWS access for Claude. Claude runs read-only commands through a read-only profile only, and hands every write back to you as a copy-paste CLI command. Credentials are read from a file you keep in your Cowork keys folder.",
   "author": {
     "name": "LittleSeneca"
   },

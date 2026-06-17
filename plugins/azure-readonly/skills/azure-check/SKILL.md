@@ -7,7 +7,7 @@ description: Verify Azure credentials are loaded under the read-only Reader serv
 
 A two-minute preflight to confirm the read-only service principal is wired up correctly before doing real Azure work. Run this when starting an Azure-heavy session or when something looks off with credentials.
 
-> This check assumes Claude's `az` calls run with `AZURE_CONFIG_DIR` pointed at the isolated read-only config dir (default `$HOME/cowork/azure-config`), logged in as a **Reader** service principal. See the plugin README for setup.
+> This check assumes Claude's `az` calls run with `AZURE_CONFIG_DIR` pointed at the isolated read-only config dir (default `$HOME/Projects/Cowork/keys/azure-config`), logged in as a **Reader** service principal. See the plugin README for setup.
 
 ## Step 1 — Confirm identity
 

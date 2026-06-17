@@ -1,7 +1,7 @@
 {
   "name": "gcp-readonly",
   "version": "1.0.0",
-  "description": "Safe Google Cloud access for Claude. Claude runs read-only commands through a read-only gcloud configuration only, and hands every write back to you as a copy-paste CLI command. Credentials are read from a service-account key file you mount in your Cowork folder.",
+  "description": "Safe Google Cloud access for Claude. Claude runs read-only commands through a read-only gcloud configuration only, and hands every write back to you as a copy-paste CLI command. Credentials are read from a service-account key file you keep in your Cowork keys folder.",
   "author": {
     "name": "LittleSeneca"
   },

@@ -11,7 +11,7 @@ These rules apply to **every** Google Cloud request, in every workspace, no exce
 > - a **read-only** configuration (default name `readonly`) bound to a read-only service account, and
 > - a **write/admin** configuration (default name `production`) the user runs writes under themselves.
 >
-> Substitute whatever names the user has configured. See the plugin README for how to wire these up from a service-account key file mounted in your Cowork folder. **Claude only ever executes commands under the read-only configuration.**
+> Substitute whatever names the user has configured. See the plugin README for how to wire these up from a service-account key file in your Cowork keys folder (`~/Projects/Cowork/keys/`). **Claude only ever executes commands under the read-only configuration.**
 
 ## 1. Reads — Claude runs them, with one configuration only
 
@@ -90,7 +90,7 @@ Any other configurations or accounts that exist in the environment are **never u
 ## 4. Credential hygiene
 
 - The read-only service account must be exactly that — read-only. If its roles can mutate state, the entire safety model of this plugin is void. See the plugin README.
-- The service-account key file should live in the mounted Cowork folder and have tight permissions (`0600`).
+- The service-account key file should live in your Cowork keys folder (`~/Projects/Cowork/keys/`) and have tight permissions (`0600`).
 - Never echo, log, or repeat the private key (or the contents of the key JSON) back to the user or into any output.
 - If `gcloud config list account --configuration=readonly` ever fails or returns an unexpected account, **stop** and surface it to the user rather than silently switching configurations or accounts.
 - Rotate the read-only key on a regular cadence, and immediately if it was ever exposed in plaintext (chat, logs, a shared file).

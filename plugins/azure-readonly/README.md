@@ -61,11 +61,11 @@ This prints an `appId`, `password`, and `tenant`. That trio is the credential. A
 
 (For tighter scope, point `--scopes` at a specific resource group instead of the whole subscription. For multiple subscriptions, add more `--scopes` or create additional assignments.)
 
-### 2. Put the credential in a file in your Cowork folder
+### 2. Put the credential in your Cowork keys folder
 
-This plugin reads credentials from a file you **mount in your Cowork folder** — the folder you make available to Claude (commonly `~/cowork/`). Do not paste secrets into chat and do not commit them to a repo.
+This plugin reads credentials from a file in your **Cowork keys folder** (`~/Projects/Cowork/keys/`), the dedicated key store inside the Cowork folder you make available to Claude. Do not paste secrets into chat and do not commit them to a repo.
 
-Create a file at, for example, `~/cowork/azure-credentials` (a simple env file):
+Create a file at, for example, `~/Projects/Cowork/keys/azure-credentials` (a simple env file):
 
 ```bash
 # Reader service principal — read-only, never able to change state.
@@ -78,7 +78,7 @@ AZURE_SUBSCRIPTION_ID=22222222-2222-2222-2222-222222222222
 Lock the file down:
 
 ```bash
-chmod 0600 ~/cowork/azure-credentials
+chmod 0600 ~/Projects/Cowork/keys/azure-credentials
 ```
 
 ### 3. Log Claude's isolated `az` context in as the Reader SP
@@ -86,8 +86,8 @@ chmod 0600 ~/cowork/azure-credentials
 So Claude's identity stays separate from your own `az login`, give it a dedicated config directory and log the service principal into *that*:
 
 ```bash
-export AZURE_CONFIG_DIR="$HOME/cowork/azure-config"
-set -a; source "$HOME/cowork/azure-credentials"; set +a
+export AZURE_CONFIG_DIR="$HOME/Projects/Cowork/keys/azure-config"
+set -a; source "$HOME/Projects/Cowork/keys/azure-credentials"; set +a
 
 az login --service-principal \
   --username "$AZURE_CLIENT_ID" \
@@ -97,7 +97,7 @@ az login --service-principal \
 az account set --subscription "$AZURE_SUBSCRIPTION_ID"
 ```
 
-Every `az` command Claude runs must have `AZURE_CONFIG_DIR="$HOME/cowork/azure-config"` in effect, so it acts as the Reader service principal. Your **own** terminal — without that `AZURE_CONFIG_DIR`, or with a different one — keeps using your normal privileged login, which is where the write-handoff commands get run.
+Every `az` command Claude runs must have `AZURE_CONFIG_DIR="$HOME/Projects/Cowork/keys/azure-config"` in effect, so it acts as the Reader service principal. Your **own** terminal — without that `AZURE_CONFIG_DIR`, or with a different one — keeps using your normal privileged login, which is where the write-handoff commands get run.
 
 > Prefer a certificate over a client secret if you can: `az login --service-principal --username <appId> --password <path-to-cert.pem> --tenant <tenant>`.
 
@@ -115,7 +115,7 @@ Confirm `user.type` is `servicePrincipal`, `user.name` is your Reader app ID, an
 
 ## Customizing names and scope
 
-`claude-readonly`, `~/cowork/azure-config`, and the subscription are defaults/examples. If yours differ, tell Claude at the start of the session (e.g. "my read-only config dir is `~/cowork/az-audit` and the subscription is `Sandbox`") and it will substitute them. Claude still only ever *executes* as the Reader service principal.
+`claude-readonly`, `~/Projects/Cowork/keys/azure-config`, and the subscription are defaults/examples. If yours differ, tell Claude at the start of the session (e.g. "my read-only config dir is `~/Projects/Cowork/keys/az-audit` and the subscription is `Sandbox`") and it will substitute them. Claude still only ever *executes* as the Reader service principal.
 
 ---
 
