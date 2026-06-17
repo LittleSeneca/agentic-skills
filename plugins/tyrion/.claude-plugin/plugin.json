@@ -1,0 +1,10 @@
+{
+  "name": "tyrion",
+  "version": "1.0.0",
+  "description": "Strategic and tactical thinking coach for consequential decisions, project scoping, tradeoffs, and negotiations, with a triage gate that catches \"how\" before \"why\". Invoke before significant commitments of time or money, or when arriving with a solution already in hand to check the upstream problem is properly understood.",
+  "author": {
+    "name": "LittleSeneca"
+  },
+  "license": "MIT",
+  "keywords": ["strategy", "decision-making", "coaching", "planning", "negotiation"]
+}

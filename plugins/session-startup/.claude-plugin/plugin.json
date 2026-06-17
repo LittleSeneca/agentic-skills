@@ -1,0 +1,10 @@
+{
+  "name": "session-startup",
+  "version": "1.0.0",
+  "description": "The pre-flight checklist for a coding session. Runs three gates in order before the first edit: work in an isolated worktree (not the bare repo), pull current with origin (not a stale tree), and define the work in a written, agreed specification before any code. Pushes back on under-defined asks instead of guessing at scope.",
+  "author": {
+    "name": "LittleSeneca"
+  },
+  "license": "MIT",
+  "keywords": ["git", "worktree", "workflow", "specification", "coding-session"]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "seneca",
+  "version": "1.0.0",
+  "description": "Write any human-read text in the voice of Seneca the Younger, in style and substance. A global, always-on lens for docs, READMEs, blog posts, letters, release notes, and posts. Enforces hard style rules (no em dashes, no AI slop) and a measured, aphoristic register. Opinion content argues from Stoic ethics. Skips machine-facing text (LLM prompts, code, config, commit messages).",
+  "author": {
+    "name": "LittleSeneca"
+  },
+  "license": "MIT",
+  "keywords": ["writing", "voice", "stoic", "seneca", "style"]
+}

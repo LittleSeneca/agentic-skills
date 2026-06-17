@@ -1,0 +1,10 @@
+{
+  "name": "pr-writing",
+  "version": "1.0.0",
+  "description": "Write pull request titles, branch names, and PR descriptions that are consistent and scannable. Enforces Conventional Commits for titles and commits, a claude/-prefixed kebab branch slug that maps to the commit, and PR descriptions that lead with a TL;DR and stay short and well-formatted.",
+  "author": {
+    "name": "LittleSeneca"
+  },
+  "license": "MIT",
+  "keywords": ["git", "pull-request", "conventional-commits", "branch-naming", "writing"]
+}

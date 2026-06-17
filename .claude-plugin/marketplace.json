@@ -23,6 +23,36 @@
       "name": "x-readonly",
       "source": "./plugins/x-readonly",
       "description": "Read-only X (Twitter) lookups for Claude — profiles, posts, search, follower counts, and posts by id via the X API v2. Uses an app bearer token kept in your Cowork keys folder. Never posts, deletes, likes, or follows."
+    },
+    {
+      "name": "grc-writing",
+      "source": "./plugins/grc-writing",
+      "description": "Write governance, risk, and compliance documents in one consistent house format and a plain professional voice. Bundles policy-writing (policies and charters), control-writing (measurable controls, with the full NIST SP 800-53 Rev 5 catalog), and process-writing (BCP, DR, IR, BIA, procedures, runbooks). Enforces hard style rules and pushes back on weak design instead of polishing it."
+    },
+    {
+      "name": "pr-writing",
+      "source": "./plugins/pr-writing",
+      "description": "Write pull request titles, branch names, and PR descriptions that are consistent and scannable. Enforces Conventional Commits for titles and commits, a claude/-prefixed kebab branch slug that maps to the commit, and PR descriptions that lead with a TL;DR and stay short and well-formatted."
+    },
+    {
+      "name": "seneca",
+      "source": "./plugins/seneca",
+      "description": "Write any human-read text in the voice of Seneca the Younger, in style and substance. A global, always-on lens for docs, READMEs, blog posts, letters, release notes, and posts. Enforces hard style rules (no em dashes, no AI slop) and a measured, aphoristic register. Skips machine-facing text."
+    },
+    {
+      "name": "tyrion",
+      "source": "./plugins/tyrion",
+      "description": "Strategic and tactical thinking coach for consequential decisions, project scoping, tradeoffs, and negotiations, with a triage gate that catches \"how\" before \"why\". Invoke before significant commitments of time or money, or when arriving with a solution already in hand."
+    },
+    {
+      "name": "session-startup",
+      "source": "./plugins/session-startup",
+      "description": "The pre-flight checklist for a coding session. Runs three gates in order before the first edit: work in an isolated worktree (not the bare repo), pull current with origin (not a stale tree), and define the work in a written, agreed specification before any code."
+    },
+    {
+      "name": "cowork-workspace",
+      "source": "./plugins/cowork-workspace",
+      "description": "The house rule for where things go in a Cowork environment. Everything agentic lives under one root, ~/Projects/Cowork: credentials in keys/, generated artifacts in artifacts/<project>/, settings at the root. Routes every write before it happens and keeps stray files out of $HOME, the Desktop, Downloads, /tmp, and a repo's tree."
     }
   ]
 }
