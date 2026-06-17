@@ -70,6 +70,66 @@ ask one short question: is this a policy (the rule, which this skill writes) or 
 procedure or plan (the steps, which `process-writing` writes)? Do not guess
 across that line.
 
+Get the **altitude** right too. A policy states *what* and *why* and stays
+durable; the specific mandatory requirements belong in a standard, the
+step-by-step belongs in a procedure, and recommended (non-mandatory) practice
+belongs in a guideline. Standards and guidelines are the same rule-stating family
+as policies and this skill writes them when asked; procedures and plans are
+`process-writing`. The hierarchy, with worked examples, is in
+`references/policy-design.md`.
+
+## What a good policy must be
+
+Consistency is the product of this skill, but a clean document wrapped around an
+unenforceable requirement still fails the audit it was written for. Hold every
+policy to these tests; the full rubric, the lifecycle, and the push-back catalog
+are in `references/policy-design.md`, which you should read before drafting
+anything non-trivial. The defining rule, shared with `control-writing` and
+`process-writing`: **do not write good copy for an unenforceable policy.** When a
+requested policy fails a test, name the failure, fix the design, and only then
+polish the wording.
+
+1. **Purposeful and scoped.** A clear objective and an explicit statement of what
+   and who it covers, including exclusions.
+2. **Enforceable and auditable.** Every requirement is backed by a control that
+   makes compliance measurable and is written so an assessor can tell pass from
+   fail. Aspirational language an auditor cannot test is not a requirement.
+3. **Owned and approved.** A named accountable owner and an approver with the
+   standing to mandate it. "IT" is not an owner.
+4. **Right altitude.** States the *what* and *why*; pushes volatile specifics to a
+   standard and steps to a procedure, so it stays durable.
+5. **Risk- and framework-aligned.** Driven by the organization's real risk
+   profile and mapped to the frameworks it earns credit against.
+6. **Maintained.** A defined review cadence (at least annually, or on significant
+   change) and a revision history that proves it.
+7. **Consistent.** Uses the program's defined terms and role names and does not
+   contradict a sibling document.
+
+## The framework backbone
+
+A complete policy set is not invented; the major frameworks already define which
+policies a program needs and what each must address. `references/frameworks-index.md`
+carries that backbone the way `control-writing` carries the NIST 800-53 catalog
+and `process-writing` carries the contingency-planning standards. Use it to find
+which policies are missing and to outline what a given policy must cover:
+
+- **The canonical ISP policy set.** The ~20 topic-specific policies that SANS,
+  ISO 27002, NIST 800-53, and the SOC 2 vendor packs converge on. Map a program's
+  existing policies against it to find gaps.
+- **ISO/IEC 27001 Clause 5.2 and Annex A 5.1.** The one mandated master policy
+  plus the topic-specific policy list to consider.
+- **NIST CSF 2.0 GOVERN (GV.PO).** The modern anchor for establishing,
+  communicating, enforcing, and reviewing policy.
+- **NIST SP 800-53 `xx-1` controls.** Each control family's Policy and Procedures
+  control (AC-1, AU-1, and so on) is a ready-made outline for the matching
+  topic-specific policy.
+- **SOC 2 Common Criteria.** CC1, CC2.2/CC2.3, and CC5.3 are the "documented,
+  communicated policy" hooks; CC6 to CC9 are evidenced by the topic policies.
+
+One well-written policy maps to ISO 27001 Annex A, a CSF subcategory, an 800-53
+`xx-1` control, and one or more SOC 2 criteria at once. Record the mappings so the
+policy is not an orphan.
+
 ## The canonical format (ISP house style)
 
 This is a common, audit-friendly ISP policy format and it exports cleanly to
@@ -195,21 +255,30 @@ someone else's prose into house style.
 
 ## Workflow
 
-1. **Identify the document type** (policy or charter) and the organization.
+1. **Identify the document type** (policy or charter) and the organization, and
+   confirm the altitude is a policy, not a standard, procedure, or plan.
 2. **Read the neighbors.** Open the two or three closest existing documents in
    the program's `governance/docs/` (or the relevant repo). Borrow their
    structure, defined terms, role names, and phrasing. This is the single
    biggest lever for consistency.
-3. **Draft from the template.** Start from `references/policy-template.md`,
+3. **Anchor to the framework.** Check `references/frameworks-index.md` for the
+   policy's place in the canonical set and the framework requirement it satisfies
+   (the ISO 27002 5.1 topic list, the matching 800-53 `xx-1` control). Use that as
+   the outline of what the policy must address, and note the mappings it earns.
+4. **Draft from the template.** Start from `references/policy-template.md`,
    keep the section order, fill Purpose and Scope first (they are formulaic and
    set the frame), then the Policy body.
-4. **Make every requirement specific and auditable.** Where you lack a real
+5. **Run the design tests.** Apply the seven tests and the push-back catalog in
+   `references/policy-design.md`. If the requested policy is unenforceable, at the
+   wrong altitude, unowned, or really a procedure or control, fix the design or
+   route it before writing the prose.
+6. **Make every requirement specific and auditable.** Where you lack a real
    value (an interval, a tool, an owner), flag it for the user rather than
    inventing it.
-5. **Add the tables.** Roles and Responsibilities near the top, Revision
+7. **Add the tables.** Roles and Responsibilities near the top, Revision
    History last. For a revision, append a row and bump the version.
-6. **Run the self-check below** before handing it back.
-7. **PDF export.** If the program generates PDFs from these markdown sources
+8. **Run the self-check below** before handing it back.
+9. **PDF export.** If the program generates PDFs from these markdown sources
    with an export script, regenerate via that script rather than hand-editing
    the exported files. Mention it; run it only if asked.
 
@@ -229,6 +298,10 @@ someone else's prose into house style.
   Description that says what actually changed.
 - Read it once as an auditor would: could someone test compliance against each
   statement? If a line cannot be tested, tighten it.
+- Confirm the altitude is right: no step-by-step procedure detail and no volatile
+  specifics that belong in a standard. If you pushed back on the design, did you
+  give the verdict first and then the fix, rather than quietly writing an
+  unenforceable policy?
 
 A good GRC document reads like a competent, level-headed compliance
 professional wrote it, and like it belongs in the same binder as every other
