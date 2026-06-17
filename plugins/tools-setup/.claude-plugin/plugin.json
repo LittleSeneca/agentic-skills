@@ -1,0 +1,11 @@
+{
+  "name": "tools-setup",
+  "description": "One-time bootstrap that installs aws, gh, and gcloud as persistent standalone binaries into ~/Projects/Cowork/tools/ and wires up credentials. Run once on a new machine; idempotent thereafter.",
+  "version": "1.0.0",
+  "skills": [
+    {
+      "name": "tools-setup",
+      "path": "skills/tools-setup/SKILL.md"
+    }
+  ]
+}

@@ -42,6 +42,12 @@ Two skills ship with the plugin:
 
 ---
 
+## Prerequisites
+
+Before using this plugin for the first time on a new machine, run the **`tools-setup` skill**. It installs `aws` as a persistent standalone binary in `~/Projects/Cowork/tools/` and wires up credentials. Subsequent sessions source `tools/env.sh` and the binary is ready instantly.
+
+---
+
 ## Setup
 
 ### 1. Create a read-only AWS key
@@ -57,10 +63,10 @@ Again: this key must not be able to change anything.
 
 This plugin reads credentials from a file in your **Cowork keys folder** (`~/Projects/Cowork/keys/`), the dedicated key store inside the Cowork folder you make available to Claude. Do not paste secrets into chat and do not commit them to a repo.
 
-Create a standard AWS credentials file at, for example, `~/Projects/Cowork/keys/aws-credentials`:
+Create a standard AWS credentials file at `~/Projects/Cowork/keys/aws-credentials`:
 
 ```ini
-[readonly]
+[your-readonly-profile-name]
 aws_access_key_id = AKIAEXAMPLEONLYREADONLY
 aws_secret_access_key = <your-read-only-secret-access-key>
 region = us-east-2
@@ -69,9 +75,11 @@ region = us-east-2
 # Claude never uses this — it only appears in the write-handoff commands
 # that Claude tells YOU to run. Configure it however you normally would
 # (SSO, IAM key, etc.); it does not have to live in this file.
-[production]
+[your-write-profile-name]
 # sso or iam config you manage yourself
 ```
+
+**Put the read-only profile first.** `tools/env.sh` auto-detects `AWS_DEFAULT_PROFILE` by reading the first `[header]` in this file — Claude will use whatever profile is listed first.
 
 Lock the file down:
 
@@ -79,31 +87,26 @@ Lock the file down:
 chmod 0600 ~/Projects/Cowork/keys/aws-credentials
 ```
 
-### 3. Point AWS at that file
+### 3. Run tools-setup
 
-Tell the AWS CLI / MCP server to use the mounted file as its shared credentials file. The simplest way is an environment variable in the environment Claude runs in:
-
-```bash
-export AWS_SHARED_CREDENTIALS_FILE="$HOME/Projects/Cowork/keys/aws-credentials"
-```
-
-(Alternatively, merge the `[readonly]` profile into your existing `~/.aws/credentials`. Either way, the goal is that `--profile readonly` resolves to your read-only key.)
+`tools-setup` installs the `aws` binary, writes `tools/env.sh`, and verifies `aws sts get-caller-identity` returns the expected ARN. You do not need to set any environment variables manually — `env.sh` handles `AWS_SHARED_CREDENTIALS_FILE` and `AWS_DEFAULT_PROFILE` automatically.
 
 ### 4. Verify
 
-Run the `aws-check` skill, or simply:
+Run the `aws-check` skill, or:
 
 ```bash
-aws sts get-caller-identity --profile readonly
+source ~/Projects/Cowork/tools/env.sh
+aws sts get-caller-identity
 ```
 
-Confirm the returned ARN is the read-only principal you created. If it is, you're ready — ask Claude any AWS question and it will use `--profile readonly` automatically.
+Confirm the returned ARN is the read-only principal you created. If it is, you're ready — ask Claude any AWS question and it will source `env.sh` and use `$AWS_DEFAULT_PROFILE` automatically.
 
 ---
 
-## Customizing profile names
+## Profile names
 
-`readonly` and `production` are defaults. If your profiles are named differently, tell Claude at the start of the session (e.g. "my read-only profile is `audit-ro` and my write profile is `prod-admin`") and it will substitute them. Claude still only ever *executes* under the read-only one.
+The profile name is whatever you put as the first header in `aws-credentials`. No configuration needed — `env.sh` reads it automatically. Claude still only ever *executes* under that first (read-only) profile; write commands are always handed off to you by name.
 
 ---
 

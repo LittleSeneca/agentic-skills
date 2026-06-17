@@ -7,27 +7,29 @@ description: Verify AWS credentials are loaded under the read-only profile befor
 
 A two-minute preflight to confirm the read-only profile is wired up correctly before doing real AWS work. Run this when starting an AWS-heavy session or when something looks off with credentials.
 
-> Profile name `readonly` below is a placeholder — substitute whatever read-only profile the user has configured. See the plugin README for setup.
+Credentials and the `aws` binary are managed by `tools/env.sh`. If `aws` is not found, run the `tools-setup` skill first.
 
 ## Step 1 — Confirm identity
 
-Run the caller-identity check through the AWS API MCP server or CLI:
-
-```
-aws sts get-caller-identity --profile readonly
+```bash
+source ~/Projects/Cowork/tools/env.sh
+aws sts get-caller-identity
 ```
 
 Report back the `Account`, `UserId`, and `Arn`. Confirm with the user that the ARN is the **expected read-only principal**. If it isn't what they expect, **stop** — do not run further AWS commands until it's resolved.
+
+Also confirm which profile resolved: `echo "Profile: $AWS_DEFAULT_PROFILE"`. This should be the read-only profile from the first header in `~/Projects/Cowork/keys/aws-credentials`.
 
 ## Step 2 — Confirm it's actually read-only (optional but recommended)
 
 The whole safety model depends on these credentials being read-only. A cheap sanity check is to confirm the profile can read but the user understands it cannot write. You can list a low-sensitivity resource to prove reads work:
 
-```
-aws ec2 describe-regions --profile readonly
+```bash
+source ~/Projects/Cowork/tools/env.sh
+aws ec2 describe-regions
 ```
 
-If a read like this fails with an auth error, the credentials or the mounted key file are misconfigured — surface it and point the user at the plugin README setup steps.
+If a read like this fails with an auth error, the credentials or the key file are misconfigured — surface it and point the user at the plugin README setup steps.
 
 ## What good looks like
 
