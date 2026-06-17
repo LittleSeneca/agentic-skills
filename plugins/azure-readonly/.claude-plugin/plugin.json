@@ -1,7 +1,7 @@
 {
   "name": "azure-readonly",
   "version": "1.0.0",
-  "description": "Safe Azure access for Claude. Claude runs read-only commands as a Reader service principal only, and hands every write back to you as a copy-paste CLI command. Credentials are read from a file you mount in your Cowork folder.",
+  "description": "Safe Azure access for Claude. Claude runs read-only commands as a Reader service principal only, and hands every write back to you as a copy-paste CLI command. Credentials are read from a file you keep in your Cowork keys folder.",
   "author": {
     "name": "LittleSeneca"
   },

@@ -27,7 +27,7 @@ Two skills ship with the plugin:
 | `x-api` | The lookups. Triggers on X/Twitter requests and runs read-only X API v2 calls (profile, posts, search, follower count, post-by-id). |
 | `x-check` | A quick preflight that confirms the bearer token is mounted and the API is reachable. |
 
-Credentials are read from a file you **mount in your Cowork folder** — never pasted into chat or committed to a repo.
+Credentials are read from a file in your **Cowork keys folder** (`~/Projects/Cowork/keys/`) — never pasted into chat or committed to a repo.
 
 ---
 
@@ -39,9 +39,9 @@ Credentials are read from a file you **mount in your Cowork folder** — never p
 2. Under the app's **Keys and tokens**, generate/copy the **Bearer Token**.
 3. A Free or Basic tier is enough for read lookups; higher tiers raise rate limits and search history depth.
 
-### 2. Put the token in a credentials file in your Cowork folder
+### 2. Put the token in your Cowork keys folder
 
-Create a file at, for example, `~/cowork/x-credentials` (the folder you make available to Claude). It's a simple `key=value` file. For read-only lookups, **only `bearer_token` is required**:
+Create a file at, for example, `~/Projects/Cowork/keys/x-credentials` (the dedicated key store inside the Cowork folder you make available to Claude). It's a simple `key=value` file. For read-only lookups, **only `bearer_token` is required**:
 
 ```ini
 bearer_token=AAAAAAAAAAAAAAAAAAAA...your-app-bearer-token...
@@ -54,15 +54,15 @@ default_handle=your_handle
 Lock the file down:
 
 ```bash
-chmod 0600 ~/cowork/x-credentials
+chmod 0600 ~/Projects/Cowork/keys/x-credentials
 ```
 
 ### 3. (Optional) Point the plugin at a different path
 
-By default the skills look at `~/cowork/x-credentials`. To use another location, set:
+By default the skills look at `~/Projects/Cowork/keys/x-credentials`. To use another location, set:
 
 ```bash
-export X_CREDENTIALS_FILE="$HOME/cowork/secrets/x-credentials"
+export X_CREDENTIALS_FILE="$HOME/Projects/Cowork/keys/x/bearer-token"
 ```
 
 ### 4. Verify
@@ -70,7 +70,7 @@ export X_CREDENTIALS_FILE="$HOME/cowork/secrets/x-credentials"
 Run the `x-check` skill, or test directly (this prints only the HTTP status, not your token):
 
 ```bash
-BEARER="$(grep -E '^bearer_token' ~/cowork/x-credentials | head -1 | cut -d= -f2- | tr -d ' \"')"
+BEARER="$(grep -E '^bearer_token' ~/Projects/Cowork/keys/x-credentials | head -1 | cut -d= -f2- | tr -d ' \"')"
 curl -s -o /dev/null -w "HTTP %{http_code}\n" \
   -H "Authorization: Bearer $BEARER" \
   "https://api.twitter.com/2/users/by/username/XDevelopers"

@@ -7,22 +7,22 @@
     {
       "name": "aws-readonly",
       "source": "./plugins/aws-readonly",
-      "description": "Safe AWS access for Claude — read-only commands run automatically, writes are handed back to you as paste-able CLI commands. Credentials come from a read-only key file mounted in your Cowork folder."
+      "description": "Safe AWS access for Claude — read-only commands run automatically, writes are handed back to you as paste-able CLI commands. Credentials come from a read-only key file kept in your Cowork keys folder."
     },
     {
       "name": "azure-readonly",
       "source": "./plugins/azure-readonly",
-      "description": "Safe Azure access for Claude — read-only commands run automatically as a Reader service principal, writes are handed back to you as paste-able az CLI commands. Credentials come from a read-only service principal file mounted in your Cowork folder."
+      "description": "Safe Azure access for Claude — read-only commands run automatically as a Reader service principal, writes are handed back to you as paste-able az CLI commands. Credentials come from a read-only service principal file kept in your Cowork keys folder."
     },
     {
       "name": "gcp-readonly",
       "source": "./plugins/gcp-readonly",
-      "description": "Safe Google Cloud access for Claude — read-only commands run automatically under a read-only gcloud configuration, writes are handed back to you as paste-able CLI commands. Credentials come from a read-only service-account key file mounted in your Cowork folder."
+      "description": "Safe Google Cloud access for Claude — read-only commands run automatically under a read-only gcloud configuration, writes are handed back to you as paste-able CLI commands. Credentials come from a read-only service-account key file kept in your Cowork keys folder."
     },
     {
       "name": "x-readonly",
       "source": "./plugins/x-readonly",
-      "description": "Read-only X (Twitter) lookups for Claude — profiles, posts, search, follower counts, and posts by id via the X API v2. Uses an app bearer token mounted in your Cowork folder. Never posts, deletes, likes, or follows."
+      "description": "Read-only X (Twitter) lookups for Claude — profiles, posts, search, follower counts, and posts by id via the X API v2. Uses an app bearer token kept in your Cowork keys folder. Never posts, deletes, likes, or follows."
     }
   ]
 }

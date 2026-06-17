@@ -11,12 +11,12 @@ These rules apply to **every** Azure request, in every workspace, no exceptions.
 > - Claude operates inside a **dedicated, isolated `AZURE_CONFIG_DIR`** (default: a folder in your Cowork directory) that is logged in as a **Reader** service principal — read-only credentials with no power to change state.
 > - The user's own privileged login lives in a **separate** `az` context that Claude never touches.
 >
-> See the plugin README for how to wire this up from a credentials file mounted in your Cowork folder. **The guardrail is the service principal's Reader role plus the isolated config dir — not Claude's behavior.**
+> See the plugin README for how to wire this up from a credentials file in your Cowork keys folder (`~/Projects/Cowork/keys/`). **The guardrail is the service principal's Reader role plus the isolated config dir — not Claude's behavior.**
 
 ## 1. Reads — Claude runs them, as the Reader service principal only
 
 - Claude executes Azure commands only through the `az` CLI (or an Azure MCP server if one is available in the environment).
-- Every `az` command Claude runs must execute with `AZURE_CONFIG_DIR` pointing at the read-only config dir (default `$HOME/cowork/azure-config`), so the active identity is the Reader service principal. Set it once for the session (export it) or prefix each command — but it must always be in effect.
+- Every `az` command Claude runs must execute with `AZURE_CONFIG_DIR` pointing at the read-only config dir (default `$HOME/Projects/Cowork/keys/azure-config`), so the active identity is the Reader service principal. Set it once for the session (export it) or prefix each command — but it must always be in effect.
 - Claude must **never** run an `az` command against the user's privileged/admin login or any other identity — even if the Reader principal lacks the permission, even if the user seems to be asking for a write, even if a previous step "needs" it. There is no fallback. If the Reader principal can't do it, treat it as a write (§2).
 - Pass `--subscription <id-or-name>` explicitly whenever the target subscription matters. `az` defaults to whatever subscription is set as default in the config dir, which may not be the one you want.
 - Reads are safe to run directly. Many list/show commands are `az <service> list` / `az <service> show`.
@@ -101,7 +101,7 @@ Any other identities or logins that exist in the environment are **never used by
 ## 4. Credential hygiene
 
 - The service principal must be exactly read-only — the built-in **Reader** role (or tighter), and nothing that can mutate state. If it can write, the entire safety model of this plugin is void. See the plugin README.
-- The credentials file (appId, secret/cert, tenant) should live in the mounted Cowork folder and have tight permissions (`0600`).
+- The credentials file (appId, secret/cert, tenant) should live in your Cowork keys folder (`~/Projects/Cowork/keys/`) and have tight permissions (`0600`).
 - Never echo, log, or repeat the client secret / certificate back to the user or into any output.
 - If `az account show` ever fails or returns an unexpected identity (not the Reader service principal), **stop** and surface it to the user rather than silently continuing or switching logins.
 - Rotate the service principal secret on a regular cadence, and immediately if it was ever exposed in plaintext (chat, logs, a shared file).

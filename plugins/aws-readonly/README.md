@@ -53,11 +53,11 @@ In the AWS account you want Claude to read, create an IAM user with a read-only 
 
 Again: this key must not be able to change anything.
 
-### 2. Put the key in a credentials file in your Cowork folder
+### 2. Put the key in your Cowork keys folder
 
-This plugin reads credentials from a file you **mount in your Cowork folder** — the folder you make available to Claude (commonly `~/cowork/`). Do not paste secrets into chat and do not commit them to a repo.
+This plugin reads credentials from a file in your **Cowork keys folder** (`~/Projects/Cowork/keys/`), the dedicated key store inside the Cowork folder you make available to Claude. Do not paste secrets into chat and do not commit them to a repo.
 
-Create a standard AWS credentials file at, for example, `~/cowork/aws-credentials`:
+Create a standard AWS credentials file at, for example, `~/Projects/Cowork/keys/aws-credentials`:
 
 ```ini
 [readonly]
@@ -76,7 +76,7 @@ region = us-east-2
 Lock the file down:
 
 ```bash
-chmod 0600 ~/cowork/aws-credentials
+chmod 0600 ~/Projects/Cowork/keys/aws-credentials
 ```
 
 ### 3. Point AWS at that file
@@ -84,7 +84,7 @@ chmod 0600 ~/cowork/aws-credentials
 Tell the AWS CLI / MCP server to use the mounted file as its shared credentials file. The simplest way is an environment variable in the environment Claude runs in:
 
 ```bash
-export AWS_SHARED_CREDENTIALS_FILE="$HOME/cowork/aws-credentials"
+export AWS_SHARED_CREDENTIALS_FILE="$HOME/Projects/Cowork/keys/aws-credentials"
 ```
 
 (Alternatively, merge the `[readonly]` profile into your existing `~/.aws/credentials`. Either way, the goal is that `--profile readonly` resolves to your read-only key.)

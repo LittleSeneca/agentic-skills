@@ -62,20 +62,20 @@ gcloud projects add-iam-policy-binding my-proj \
   --role="roles/iam.securityReviewer"
 
 # Create a JSON key for that service account
-gcloud iam service-accounts keys create ~/cowork/gcp-readonly-key.json \
+gcloud iam service-accounts keys create ~/Projects/Cowork/keys/gcp-readonly-key.json \
   --iam-account=claude-readonly@my-proj.iam.gserviceaccount.com
 ```
 
 Again: this service account must not be able to change anything. For org-wide visibility, grant the roles at the organization or folder level instead of per-project.
 
-### 2. Put the key in your Cowork folder
+### 2. Put the key in your Cowork keys folder
 
-This plugin reads credentials from a JSON key file you **mount in your Cowork folder** — the folder you make available to Claude (commonly `~/cowork/`). Do not paste the key into chat and do not commit it to a repo.
+This plugin reads credentials from a JSON key file in your **Cowork keys folder** (`~/Projects/Cowork/keys/`), the dedicated key store inside the Cowork folder you make available to Claude. Do not paste the key into chat and do not commit it to a repo.
 
-The example above already writes the key to `~/cowork/gcp-readonly-key.json`. Lock it down:
+The example above already writes the key to `~/Projects/Cowork/keys/gcp-readonly-key.json`. Lock it down:
 
 ```bash
-chmod 0600 ~/cowork/gcp-readonly-key.json
+chmod 0600 ~/Projects/Cowork/keys/gcp-readonly-key.json
 ```
 
 ### 3. Create a `readonly` gcloud configuration bound to that key
@@ -88,7 +88,7 @@ gcloud config configurations create readonly
 
 # Activate the read-only service-account key
 gcloud auth activate-service-account \
-  --key-file="$HOME/cowork/gcp-readonly-key.json"
+  --key-file="$HOME/Projects/Cowork/keys/gcp-readonly-key.json"
 
 # Set the default project for this configuration
 gcloud config set project my-proj --configuration=readonly

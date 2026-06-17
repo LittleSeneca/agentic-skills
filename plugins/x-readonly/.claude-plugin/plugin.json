@@ -1,7 +1,7 @@
 {
   "name": "x-readonly",
   "version": "1.0.0",
-  "description": "Read-only X (Twitter) lookups for Claude. Look up profiles, recent posts, search, follower counts, and individual posts by id via the X API v2 — using a bearer token you mount in your Cowork folder. Strictly read-only: never posts, deletes, likes, or follows.",
+  "description": "Read-only X (Twitter) lookups for Claude. Look up profiles, recent posts, search, follower counts, and individual posts by id via the X API v2 — using a bearer token you keep in your Cowork keys folder. Strictly read-only: never posts, deletes, likes, or follows.",
   "author": {
     "name": "LittleSeneca"
   },

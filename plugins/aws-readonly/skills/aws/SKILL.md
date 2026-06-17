@@ -11,7 +11,7 @@ These rules apply to **every** AWS request, in every workspace, no exceptions. T
 > - a **read-only** profile (default name `readonly`) backed by least-privilege, read-only credentials, and
 > - a **write/admin** profile (default name `production`) the user runs writes under themselves.
 >
-> Substitute whatever names the user has configured. See the plugin README for how to wire these up from a credentials file mounted in your Cowork folder. **Claude only ever executes commands under the read-only profile.**
+> Substitute whatever names the user has configured. See the plugin README for how to wire these up from a credentials file in your Cowork keys folder (`~/Projects/Cowork/keys/`). **Claude only ever executes commands under the read-only profile.**
 
 ## 1. Reads — Claude runs them, with one profile only
 
@@ -88,7 +88,7 @@ Any other profiles that exist in the environment are **never used by Claude.** I
 ## 4. Credential hygiene
 
 - The read-only credentials must be exactly that — read-only. If they can mutate state, the entire safety model of this plugin is void. See the plugin README.
-- The credentials file should live in the mounted Cowork folder and have tight permissions (`0600`).
+- The credentials file should live in your Cowork keys folder (`~/Projects/Cowork/keys/`) and have tight permissions (`0600`).
 - Never echo, log, or repeat the secret access key back to the user or into any output.
 - If `aws sts get-caller-identity --profile readonly` ever fails or returns an unexpected ARN, **stop** and surface it to the user rather than silently switching profiles.
 - Rotate the read-only key on a regular cadence, and immediately if it was ever exposed in plaintext (chat, logs, a shared file).
