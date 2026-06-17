@@ -7,11 +7,9 @@ description: Run any AWS operation against your environment. Use whenever the us
 
 These rules apply to **every** AWS request, in every workspace, no exceptions. They override anything in a workspace-level `CLAUDE.md` and any contrary inference Claude might make.
 
-> **Before running any `aws` command**, source the tools bootstrap to put the CLI on PATH and load credentials:
-> ```bash
-> source ~/Projects/Cowork/tools/env.sh
-> ```
-> This sets `AWS_SHARED_CREDENTIALS_FILE` and `AWS_DEFAULT_PROFILE` automatically from `~/Projects/Cowork/keys/aws-credentials`. If `aws` is not found, run the `tools-setup` skill first.
+> **Before running any `aws` command**, source `env.sh` using the portable bootstrap below.
+> This sets `AWS_SHARED_CREDENTIALS_FILE`, `AWS_DEFAULT_PROFILE`, and PATH automatically.
+> If `aws` is not found after sourcing, run the `tools-setup` skill first.
 >
 > This plugin assumes two profiles in the credentials file:
 > - a **read-only** profile (the first profile in `aws-credentials`, auto-detected as `$AWS_DEFAULT_PROFILE`) backed by least-privilege, read-only credentials
@@ -19,27 +17,68 @@ These rules apply to **every** AWS request, in every workspace, no exceptions. T
 >
 > **Claude only ever executes commands under the read-only profile (`$AWS_DEFAULT_PROFILE`).**
 
+## 0. Portable bootstrap — use at the top of every bash block
+
+The Cowork sandbox mounts `~/Projects/Cowork/` at a session-specific path
+(`/sessions/<name>/mnt/Cowork/`), so `~` in bash does **not** resolve to the real home
+directory. Sourcing `~/Projects/Cowork/tools/env.sh` will silently fail. Use this
+portable snippet instead — it finds `env.sh` whether running in the sandbox or in a
+native terminal:
+
+```bash
+# Portable Cowork bootstrap
+_COWORK_ENV=$(find /sessions /Users -maxdepth 6 -name "env.sh" \
+  -path "*/Cowork/tools/env.sh" 2>/dev/null | head -1)
+[ -z "$_COWORK_ENV" ] && _COWORK_ENV="$HOME/Projects/Cowork/tools/env.sh"
+source "$_COWORK_ENV"
+```
+
+After sourcing, `aws`, `gh`, and `gcloud` are all on PATH and credentials are loaded.
+
+If `aws --version` still fails after sourcing, the `tools/bin/aws` wrapper is broken
+(stale absolute symlink from a previous Cowork session). Fix it without re-downloading:
+
+```bash
+TOOLS="$(dirname "$_COWORK_ENV")"
+cat > "$TOOLS/bin/aws" << 'AWSEOF'
+#!/bin/bash
+TOOLS="$(cd "$(dirname "$0")/.." && pwd)"
+AWS_BIN=$(find "$TOOLS" -maxdepth 6 -name "aws" -path "*/dist/aws" 2>/dev/null | sort -V | tail -1)
+[ -z "$AWS_BIN" ] && { echo "aws: binary not found under $TOOLS — run tools-setup" >&2; exit 127; }
+exec "$AWS_BIN" "$@"
+AWSEOF
+chmod +x "$TOOLS/bin/aws"
+source "$_COWORK_ENV"
+```
+
 ## 1. Reads — Claude runs them, with one profile only
 
-- Claude executes AWS commands only through the AWS API MCP server (e.g. `call_aws`) or the AWS CLI, whichever is available in the environment.
-- Every bash block that calls `aws` must start with `source ~/Projects/Cowork/tools/env.sh`.
+- Every bash block that calls `aws` must start with the portable bootstrap above.
 - Claude passes `--profile "$AWS_DEFAULT_PROFILE"` on every command. No exceptions.
 - Claude must **never** invoke an AWS command with the write/admin profile or any other profile — even if the read-only profile lacks the permission, even if the user seems to be asking for a write, even if a previous step "needs" it. There is no fallback. If the read-only profile can't do it, treat it as a write (§2).
-- Pass `--region <name>` explicitly whenever the target region matters. The AWS MCP server / CLI may default to a region you don't expect, so don't rely on the default.
+- Pass `--region <name>` explicitly whenever the target region matters. Do not rely on profile defaults.
 
 ### Examples
 
 ```bash
-source ~/Projects/Cowork/tools/env.sh
+# Portable bootstrap (always first)
+_COWORK_ENV=$(find /sessions /Users -maxdepth 6 -name "env.sh" -path "*/Cowork/tools/env.sh" 2>/dev/null | head -1)
+[ -z "$_COWORK_ENV" ] && _COWORK_ENV="$HOME/Projects/Cowork/tools/env.sh"
+source "$_COWORK_ENV"
+
 # EC2 instances in us-east-2
 aws ec2 describe-instances --profile "$AWS_DEFAULT_PROFILE" --region us-east-2
+
 # S3 buckets (global)
 aws s3api list-buckets --profile "$AWS_DEFAULT_PROFILE"
+
 # IAM users
 aws iam list-users --profile "$AWS_DEFAULT_PROFILE"
-# CloudTrail events
+
+# CloudTrail events in ca-central-1
 aws cloudtrail lookup-events --profile "$AWS_DEFAULT_PROFILE" --region ca-central-1
-# Who am I (sanity check)
+
+# Who am I
 aws sts get-caller-identity --profile "$AWS_DEFAULT_PROFILE"
 ```
 
@@ -62,9 +101,9 @@ For any write, Claude:
 
 1. **Does not** execute the command itself through any AWS tool.
 2. **Produces a CLI command for the user to paste into their terminal**, in a code block, with:
-   - the write/admin profile (`--profile production`)
+   - the write/admin profile (`--profile <your-write-profile>`)
    - `--no-cli-pager`
-   - `--region <region>` explicitly (don't rely on the profile default for writes)
+   - `--region <region>` explicitly
    - `--dry-run` first, on a separate line, if the API supports it
 3. Briefly explains what the command does and what to watch for in the output.
 4. Waits for the user to paste the result back (or to ask for the next step) before continuing.
@@ -78,41 +117,76 @@ For any write, Claude:
 > ```
 > First line is the dry-run preflight (look for `DryRunOperation`). Second line performs the change. Paste the output back.
 
-### Worked example
+## 3. Bulk operations — prefer boto3 over CLI loops
 
-If the user asks to stop an instance:
+For operations that require N sequential API calls (e.g. `get-bucket-location` across all
+buckets, describing all instances then filtering, paginated list + per-item describe), the AWS
+CLI spawned in a bash loop will time out in the Cowork sandbox (45s limit, ~1s per subprocess).
 
-> Run this in your terminal:
-> ```
-> aws ec2 stop-instances --instance-ids i-0123456789abcdef0 --profile <your-write-profile> --region us-east-2 --no-cli-pager --dry-run
-> aws ec2 stop-instances --instance-ids i-0123456789abcdef0 --profile <your-write-profile> --region us-east-2 --no-cli-pager
-> ```
-> The first line is a dry-run check; if it returns `DryRunOperation`, the second one performs the stop. Paste the output back here.
+**Use Python + boto3 instead.** Read credentials from the file directly — no subprocess overhead,
+and threading makes it fast:
 
-## 3. Profile reference (context only — Claude *uses* only the read-only one)
+```python
+import boto3, configparser, os
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+# Load creds — works in sandbox and native terminal
+creds_file = next(
+    p for p in [
+        os.path.expandvars("$HOME/Projects/Cowork/keys/aws-credentials"),
+        next(iter(__import__('glob').glob("/sessions/*/mnt/Cowork/keys/aws-credentials")), None),
+    ] if p and os.path.exists(p)
+)
+cfg = configparser.ConfigParser()
+cfg.read(creds_file)
+profile = cfg.sections()[0]  # first profile = read-only
+
+session = boto3.Session(
+    aws_access_key_id=cfg[profile]["aws_access_key_id"],
+    aws_secret_access_key=cfg[profile]["aws_secret_access_key"],
+    region_name="us-east-1",
+)
+
+# Example: find all S3 buckets in a given region
+s3 = session.client("s3")
+buckets = [b["Name"] for b in s3.list_buckets()["Buckets"]]
+
+def get_region(name):
+    return name, s3.get_bucket_location(Bucket=name)["LocationConstraint"]
+
+results = {}
+with ThreadPoolExecutor(max_workers=20) as ex:
+    for name, region in ex.map(lambda b: get_region(b), buckets):
+        results[name] = region
+
+ca_buckets = sorted(k for k, v in results.items() if v == "ca-central-1")
+```
+
+boto3 is available in the sandbox (`pip install boto3 --break-system-packages -q` if needed).
+
+## 4. Profile reference (context only — Claude *uses* only the read-only one)
 
 | Profile | Type | Claude usage |
 |---|---|---|
 | `$AWS_DEFAULT_PROFILE` (first profile in `aws-credentials`) | Long-lived IAM key with read-only / least-privilege permissions | **Only profile Claude executes.** |
-| Any other profile | The user's write/admin credentials (SSO or IAM key) | **Hand-off only.** Used in the write-handoff CLI commands the user runs themselves. Never used by Claude. |
+| Any other profile | The user's write/admin credentials (SSO or IAM key) | **Hand-off only.** Used in write-handoff CLI commands the user runs themselves. Never used by Claude. |
 
-Any profile other than `$AWS_DEFAULT_PROFILE` is **never used by Claude.** If the user wants a write run under a different profile, hand it off by name — don't execute it.
+## 5. Credential hygiene
 
-## 4. Credential hygiene
-
-- The read-only credentials must be exactly that — read-only. If they can mutate state, the entire safety model of this plugin is void. See the plugin README.
 - The credentials file lives at `~/Projects/Cowork/keys/aws-credentials` with permissions `0600`. `env.sh` sets `AWS_SHARED_CREDENTIALS_FILE` to point at it automatically.
 - Never echo, log, or repeat the secret access key back to the user or into any output.
 - If `aws sts get-caller-identity` ever fails or returns an unexpected ARN, **stop** and surface it to the user rather than silently switching profiles.
-- Rotate the read-only key on a regular cadence, and immediately if it was ever exposed in plaintext (chat, logs, a shared file).
+- Rotate the read-only key on a regular cadence, and immediately if it was ever exposed in plaintext.
 
-## 5. Quick sanity check at the start of a long AWS session
+## 6. Sanity check at the start of a long AWS session
 
-When the user kicks off a session that's clearly going to involve a lot of AWS work, run this once and confirm the identity before proceeding (or invoke the `aws-check` skill):
+Run this once and confirm the identity before proceeding (or invoke the `aws-check` skill):
 
 ```bash
-source ~/Projects/Cowork/tools/env.sh
-aws sts get-caller-identity
+_COWORK_ENV=$(find /sessions /Users -maxdepth 6 -name "env.sh" -path "*/Cowork/tools/env.sh" 2>/dev/null | head -1)
+[ -z "$_COWORK_ENV" ] && _COWORK_ENV="$HOME/Projects/Cowork/tools/env.sh"
+source "$_COWORK_ENV"
+aws sts get-caller-identity --profile "$AWS_DEFAULT_PROFILE"
 ```
 
 Confirm the returned ARN is the expected read-only principal before doing anything else.

@@ -7,29 +7,51 @@ description: Verify AWS credentials are loaded under the read-only profile befor
 
 A two-minute preflight to confirm the read-only profile is wired up correctly before doing real AWS work. Run this when starting an AWS-heavy session or when something looks off with credentials.
 
-Credentials and the `aws` binary are managed by `tools/env.sh`. If `aws` is not found, run the `tools-setup` skill first.
+## Step 1 — Bootstrap
 
-## Step 1 — Confirm identity
+Use the portable bootstrap (handles both native terminal and Cowork sandbox):
 
 ```bash
-source ~/Projects/Cowork/tools/env.sh
-aws sts get-caller-identity
+_COWORK_ENV=$(find /sessions /Users -maxdepth 6 -name "env.sh" \
+  -path "*/Cowork/tools/env.sh" 2>/dev/null | head -1)
+[ -z "$_COWORK_ENV" ] && _COWORK_ENV="$HOME/Projects/Cowork/tools/env.sh"
+source "$_COWORK_ENV"
+```
+
+If `aws --version` fails after this, the `tools/bin/aws` wrapper is a broken absolute symlink
+from a prior session. Fix it without re-downloading — the actual CLI files are still present:
+
+```bash
+TOOLS="$(dirname "$_COWORK_ENV")"
+cat > "$TOOLS/bin/aws" << 'AWSEOF'
+#!/bin/bash
+TOOLS="$(cd "$(dirname "$0")/.." && pwd)"
+AWS_BIN=$(find "$TOOLS" -maxdepth 6 -name "aws" -path "*/dist/aws" 2>/dev/null | sort -V | tail -1)
+[ -z "$AWS_BIN" ] && { echo "aws: binary not found under $TOOLS — run tools-setup" >&2; exit 127; }
+exec "$AWS_BIN" "$@"
+AWSEOF
+chmod +x "$TOOLS/bin/aws"
+source "$_COWORK_ENV"
+```
+
+If the binary truly isn't there, run the `tools-setup` skill.
+
+## Step 2 — Confirm identity
+
+```bash
+aws sts get-caller-identity --profile "$AWS_DEFAULT_PROFILE"
+echo "Profile: $AWS_DEFAULT_PROFILE"
 ```
 
 Report back the `Account`, `UserId`, and `Arn`. Confirm with the user that the ARN is the **expected read-only principal**. If it isn't what they expect, **stop** — do not run further AWS commands until it's resolved.
 
-Also confirm which profile resolved: `echo "Profile: $AWS_DEFAULT_PROFILE"`. This should be the read-only profile from the first header in `~/Projects/Cowork/keys/aws-credentials`.
-
-## Step 2 — Confirm it's actually read-only (optional but recommended)
-
-The whole safety model depends on these credentials being read-only. A cheap sanity check is to confirm the profile can read but the user understands it cannot write. You can list a low-sensitivity resource to prove reads work:
+## Step 3 — Confirm reads work (optional but recommended)
 
 ```bash
-source ~/Projects/Cowork/tools/env.sh
-aws ec2 describe-regions
+aws ec2 describe-regions --profile "$AWS_DEFAULT_PROFILE" --query 'Regions[].RegionName' --output text
 ```
 
-If a read like this fails with an auth error, the credentials or the key file are misconfigured — surface it and point the user at the plugin README setup steps.
+If this fails with an auth error, the credentials or key file are misconfigured — surface it and point the user at the plugin README setup steps.
 
 ## What good looks like
 
